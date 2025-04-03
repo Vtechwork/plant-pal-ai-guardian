@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { Plant } from "@/lib/plant-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { Droplet, Flower2, Camera, FileText } from "lucide-react";
 
 interface AddDataDialogProps {
@@ -40,15 +41,21 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: AddDataDial
     switch(activeTab) {
       case "watering":
         newHistoryItem.details = `${waterAmount}ml of water${notes ? ` - ${notes}` : ''}`;
+        toast.success(`Watering recorded: ${waterAmount}ml`);
         break;
       case "fertilizing":
         newHistoryItem.details = `Fertilizer added${notes ? ` - ${notes}` : ''}`;
+        toast.success("Fertilizing recorded");
         break;
       case "photo":
         newHistoryItem.details = notes || "New photo added";
+        // In a real app, we would handle image upload and storage here
+        newHistoryItem.imageUrl = "/lovable-uploads/9cb567cb-76c1-4796-8a17-3c330261ebad.png"; // Add another uploaded image
+        toast.success("Photo added");
         break;
       case "note":
         newHistoryItem.details = notes || "New note added";
+        toast.success("Note added");
         break;
     }
 

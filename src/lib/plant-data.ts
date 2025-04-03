@@ -51,7 +51,7 @@ export const samplePlant: Plant = {
   id: "plant-001",
   name: "Monty",
   species: "Monstera Deliciosa",
-  imageUrl: "/monstera.jpg", // We'll add this image
+  imageUrl: "/lovable-uploads/2d33b654-f6c8-43b4-b276-b6f9c4d3666b.png", // Updated with uploaded image
   location: "Living Room - North Window",
   acquiredDate: "2023-08-15",
   digitalTwin: {
@@ -79,7 +79,7 @@ export const samplePlant: Plant = {
       id: "hist-003",
       date: "2023-11-01T10:00:00Z",
       type: "photo",
-      imageUrl: "/monstera-history-1.jpg" // We'll add this image
+      imageUrl: "/lovable-uploads/63ec1502-1bc0-43db-b999-2b3bb740fdba.png" // Updated with uploaded image
     },
     {
       id: "hist-004",

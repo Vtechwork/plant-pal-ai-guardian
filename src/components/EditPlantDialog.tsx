@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plant } from "@/lib/plant-data";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface EditPlantDialogProps {
   isOpen: boolean;
@@ -33,6 +33,7 @@ const EditPlantDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: EditPlant
     // Call the onPlantUpdated callback with the updated plant data
     onPlantUpdated(updatedPlant);
     
+    toast.success("Plant details updated successfully!");
     setIsSubmitting(false);
     setIsOpen(false);
   };
