@@ -1,19 +1,22 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { getUserPlants, initializeUserWithDemoPlant } from '@/services/PlantDataService';
+import { getUserPlants, initializeUserWithDemoPlant, savePlant } from '@/services/PlantDataService';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Plant } from '@/lib/plant-data';
 import { Leaf, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
+import AddPlantDialog from '@/components/AddPlantDialog';
+import { toast } from 'sonner';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAddPlantDialogOpen, setIsAddPlantDialogOpen] = useState(false);
   
   useEffect(() => {
     if (!user) {
@@ -30,6 +33,16 @@ const Dashboard = () => {
     setLoading(false);
   }, [user, navigate]);
   
+  const handleAddPlant = (newPlant: Plant) => {
+    if (user) {
+      // Save the new plant to storage
+      savePlant(user.id, newPlant);
+      
+      // Update local state
+      setPlants(prevPlants => [newPlant, ...prevPlants]);
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -38,7 +51,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">My Plants</h1>
           
-          <Button>
+          <Button onClick={() => setIsAddPlantDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Add New Plant
           </Button>
         </div>
@@ -54,7 +67,7 @@ const Dashboard = () => {
             <p className="text-muted-foreground mb-6">
               Add your first plant to get started with personalized care
             </p>
-            <Button>
+            <Button onClick={() => setIsAddPlantDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" /> Add Your First Plant
             </Button>
           </div>
@@ -108,6 +121,12 @@ const Dashboard = () => {
           </div>
         )}
       </main>
+      
+      <AddPlantDialog
+        isOpen={isAddPlantDialogOpen}
+        setIsOpen={setIsAddPlantDialogOpen}
+        onPlantAdded={handleAddPlant}
+      />
     </div>
   );
 };

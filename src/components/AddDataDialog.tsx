@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,31 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: AddDataDial
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [waterAmount, setWaterAmount] = useState("");
   const [notes, setNotes] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fertilizerId, setFertilizerId] = useState("");
+  const [fertilizerAmount, setFertilizerAmount] = useState("");
+  const [noteTitle, setNoteTitle] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+      // Show image preview
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target && event.target.result) {
+          toast.success("Photo selected");
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,21 +65,32 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: AddDataDial
     // Add details based on the tab
     switch(activeTab) {
       case "watering":
+        if (!waterAmount) {
+          toast.error("Please enter a water amount");
+          setIsSubmitting(false);
+          return;
+        }
         newHistoryItem.details = `${waterAmount}ml of water${notes ? ` - ${notes}` : ''}`;
         toast.success(`Watering recorded: ${waterAmount}ml`);
         break;
       case "fertilizing":
-        newHistoryItem.details = `Fertilizer added${notes ? ` - ${notes}` : ''}`;
+        newHistoryItem.details = `${fertilizerId ? fertilizerId + ' fertilizer' : 'Fertilizer'} ${fertilizerAmount ? fertilizerAmount : 'added'}${notes ? ` - ${notes}` : ''}`;
         toast.success("Fertilizing recorded");
         break;
       case "photo":
         newHistoryItem.details = notes || "New photo added";
-        // In a real app, we would handle image upload and storage here
-        newHistoryItem.imageUrl = "/lovable-uploads/9cb567cb-76c1-4796-8a17-3c330261ebad.png"; // Add another uploaded image
+        // In a real app, we would upload the image to storage
+        // For now, use a placeholder image
+        newHistoryItem.imageUrl = "/lovable-uploads/9cb567cb-76c1-4796-8a17-3c330261ebad.png";
         toast.success("Photo added");
         break;
       case "note":
-        newHistoryItem.details = notes || "New note added";
+        if (!notes) {
+          toast.error("Please enter a note");
+          setIsSubmitting(false);
+          return;
+        }
+        newHistoryItem.details = noteTitle ? `${noteTitle}: ${notes}` : notes;
         toast.success("Note added");
         break;
     }
@@ -71,6 +107,10 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: AddDataDial
     // Reset form
     setWaterAmount("");
     setNotes("");
+    setFertilizerId("");
+    setFertilizerAmount("");
+    setNoteTitle("");
+    setSelectedFile(null);
     setIsSubmitting(false);
     setIsOpen(false);
   };
@@ -133,7 +173,7 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: AddDataDial
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="fertilizer-type">Fertilizer Type</Label>
-                  <Select>
+                  <Select value={fertilizerId} onValueChange={setFertilizerId}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select fertilizer type" />
                     </SelectTrigger>
@@ -150,6 +190,8 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: AddDataDial
                   <Input
                     id="fertilizer-amount"
                     placeholder="e.g., 5ml diluted in water"
+                    value={fertilizerAmount}
+                    onChange={(e) => setFertilizerAmount(e.target.value)}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -168,11 +210,30 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: AddDataDial
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="photo-upload">Upload Photo</Label>
-                  <div className="border-2 border-dashed rounded-md p-6 text-center cursor-pointer hover:bg-muted/50 transition-colors">
-                    <Camera className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-1">Click to upload or drag and drop</p>
-                    <p className="text-xs text-muted-foreground">PNG, JPG or WEBP (max. 5MB)</p>
-                    <Input id="photo-upload" type="file" className="hidden" />
+                  <div 
+                    className="border-2 border-dashed rounded-md p-6 text-center cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={handleUploadClick}
+                  >
+                    {selectedFile ? (
+                      <div className="flex flex-col items-center">
+                        <p className="text-sm text-primary mb-1">Photo selected: {selectedFile.name}</p>
+                        <p className="text-xs text-muted-foreground">Click to change</p>
+                      </div>
+                    ) : (
+                      <>
+                        <Camera className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground mb-1">Click to upload or drag and drop</p>
+                        <p className="text-xs text-muted-foreground">PNG, JPG or WEBP (max. 5MB)</p>
+                      </>
+                    )}
+                    <Input 
+                      id="photo-upload" 
+                      type="file" 
+                      className="hidden"
+                      ref={fileInputRef}
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
                   </div>
                 </div>
                 <div className="grid gap-2">
@@ -194,6 +255,8 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: AddDataDial
                   <Input
                     id="note-title"
                     placeholder="e.g., New leaf unfurling!"
+                    value={noteTitle}
+                    onChange={(e) => setNoteTitle(e.target.value)}
                   />
                 </div>
                 <div className="grid gap-2">

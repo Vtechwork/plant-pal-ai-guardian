@@ -1,4 +1,3 @@
-
 export interface CareTip {
   id: string;
   title: string;
@@ -11,7 +10,7 @@ export interface PlantHistory {
   id: string;
   date: string;
   type: "watering" | "fertilizing" | "repotting" | "photo" | "note";
-  details?: string;
+  details: string;
   imageUrl?: string;
 }
 
