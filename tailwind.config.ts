@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,21 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Plant Pal AI custom colors
+				plantGreen: {
+					light: '#8BC34A',
+					DEFAULT: '#4CAF50',
+					dark: '#2E7D32'
+				},
+				soil: {
+					light: '#A1887F',
+					DEFAULT: '#795548',
+					dark: '#5D4037'
+				},
+				sunlight: '#FFC107',
+				water: '#03A9F4',
+				danger: '#F44336',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +99,21 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'pulse-gentle': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.7' },
+				},
+				'growth': {
+					'0%': { transform: 'scale(0.95)' },
+					'100%': { transform: 'scale(1)' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-gentle': 'pulse-gentle 3s ease-in-out infinite',
+				'growth': 'growth 0.3s ease-out',
 			}
 		}
 	},
