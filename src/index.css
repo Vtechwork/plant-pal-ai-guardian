@@ -2,116 +2,84 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 122 36% 20%;
-
+    --foreground: 222.2 84% 4.9%;
+ 
     --card: 0 0% 100%;
-    --card-foreground: 122 36% 20%;
-
+    --card-foreground: 222.2 84% 4.9%;
+ 
     --popover: 0 0% 100%;
-    --popover-foreground: 122 36% 20%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 355.7 100% 97.3%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 142.1 76.2% 36.3%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-    --primary: 122 39% 49%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 83 55% 53%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 120 16% 93%;
-    --muted-foreground: 122 13% 45%;
-
-    --accent: 83 55% 53%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 120 10% 87%;
-    --input: 120 10% 87%;
-    --ring: 122 39% 49%;
-
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142.1 76.2% 36.3%;
+ 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --plantGreen: 142.1 76.2% 36.3%;
   }
-
+ 
   .dark {
-    --background: 122 36% 10%;
-    --foreground: 120 10% 90%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 142.1 70.6% 45.3%;
+    --primary-foreground: 144.9 80.4% 10%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --accent: 142.1 70.6% 45.3%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142.1 76.2% 45.3%;
 
-    --card: 122 36% 12%;
-    --card-foreground: 120 10% 90%;
-
-    --popover: 122 36% 10%;
-    --popover-foreground: 120 10% 90%;
-
-    --primary: 122 39% 49%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 83 55% 43%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 122 36% 20%;
-    --muted-foreground: 120 10% 70%;
-
-    --accent: 122 36% 20%;
-    --accent-foreground: 120 10% 90%;
-
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 122 36% 24%;
-    --input: 122 36% 24%;
-    --ring: 122 39% 49%;
-
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --plantGreen: 142.1 70.6% 45.3%;
   }
 }
-
+ 
 @layer base {
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-@layer components {
-  .plant-gauge {
-    @apply relative h-full w-full overflow-hidden rounded-full;
-    background: linear-gradient(0deg, #ECEFF1 0%, #CFD8DC 100%);
-  }
-  
-  .plant-gauge-fill {
-    @apply absolute bottom-0 left-0 w-full transition-all duration-1000 ease-in-out;
-  }
-  
-  .plant-card {
-    @apply overflow-hidden rounded-lg border bg-card text-card-foreground shadow transition-all duration-200 hover:shadow-md;
-  }
-  
-  .leaf-pattern {
-    background-color: #f9fafb;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 20c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10zm0-10c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z' fill='%234caf50' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-  }
+.plant-card {
+  border-color: hsl(var(--plantGreen) / 0.5);
 }

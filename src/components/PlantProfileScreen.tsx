@@ -12,16 +12,29 @@ import { Edit, PlusCircle, ArrowLeftRight, NotebookText, History } from 'lucide-
 import EditPlantDialog from "./EditPlantDialog";
 import AddDataDialog from "./AddDataDialog";
 import AskAIDialog from "./AskAIDialog";
+import { useAuth } from '@/context/AuthContext';
+import { savePlant } from '@/services/PlantDataService';
+import { toast } from 'sonner';
 
 interface PlantProfileScreenProps {
   plant: Plant;
 }
 
 const PlantProfileScreen = ({ plant }: PlantProfileScreenProps) => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isAddDataDialogOpen, setIsAddDataDialogOpen] = useState(false);
   const [isAskAIDialogOpen, setIsAskAIDialogOpen] = useState(false);
+  
+  // Handle plant updates
+  const handlePlantUpdated = (updatedPlant: Plant) => {
+    if (user) {
+      savePlant(user.id, updatedPlant);
+      toast.success('Plant information updated');
+      // In a real app, we would update the state here to reflect changes
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 pb-8">
@@ -137,11 +150,13 @@ const PlantProfileScreen = ({ plant }: PlantProfileScreenProps) => {
         isOpen={isEditDialogOpen} 
         setIsOpen={setIsEditDialogOpen} 
         plant={plant} 
+        onPlantUpdated={handlePlantUpdated}
       />
       <AddDataDialog 
         isOpen={isAddDataDialogOpen} 
         setIsOpen={setIsAddDataDialogOpen} 
         plant={plant} 
+        onPlantUpdated={handlePlantUpdated}
       />
       <AskAIDialog 
         isOpen={isAskAIDialogOpen} 
