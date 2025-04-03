@@ -9,6 +9,9 @@ import CareTipCard from "./CareTipCard";
 import PlantHistoryItem from "./PlantHistoryItem";
 import DigitalTwinStatus from "./DigitalTwinStatus";
 import { Edit, PlusCircle, ArrowLeftRight, NotebookText, History } from 'lucide-react';
+import EditPlantDialog from "./EditPlantDialog";
+import AddDataDialog from "./AddDataDialog";
+import AskAIDialog from "./AskAIDialog";
 
 interface PlantProfileScreenProps {
   plant: Plant;
@@ -16,6 +19,9 @@ interface PlantProfileScreenProps {
 
 const PlantProfileScreen = ({ plant }: PlantProfileScreenProps) => {
   const [activeTab, setActiveTab] = useState("overview");
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAddDataDialogOpen, setIsAddDataDialogOpen] = useState(false);
+  const [isAskAIDialogOpen, setIsAskAIDialogOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6 pb-8">
@@ -59,10 +65,10 @@ const PlantProfileScreen = ({ plant }: PlantProfileScreenProps) => {
               </div>
 
               <div className="flex gap-2">
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="outline" onClick={() => setIsEditDialogOpen(true)}>
                   <Edit className="h-4 w-4 mr-1" /> Edit
                 </Button>
-                <Button size="sm">
+                <Button size="sm" onClick={() => setIsAddDataDialogOpen(true)}>
                   <PlusCircle className="h-4 w-4 mr-1" /> Add Data
                 </Button>
               </div>
@@ -116,11 +122,32 @@ const PlantProfileScreen = ({ plant }: PlantProfileScreenProps) => {
       </div>
 
       <div className="mx-4 text-center">
-        <Button variant="outline" className="w-full max-w-md">
+        <Button 
+          variant="outline" 
+          className="w-full max-w-md"
+          onClick={() => setIsAskAIDialogOpen(true)}
+        >
           <ArrowLeftRight className="h-4 w-4 mr-2" />
           Ask Plant Pal AI
         </Button>
       </div>
+
+      {/* Dialogs */}
+      <EditPlantDialog 
+        isOpen={isEditDialogOpen} 
+        setIsOpen={setIsEditDialogOpen} 
+        plant={plant} 
+      />
+      <AddDataDialog 
+        isOpen={isAddDataDialogOpen} 
+        setIsOpen={setIsAddDataDialogOpen} 
+        plant={plant} 
+      />
+      <AskAIDialog 
+        isOpen={isAskAIDialogOpen} 
+        setIsOpen={setIsAskAIDialogOpen} 
+        plant={plant} 
+      />
     </div>
   );
 };
