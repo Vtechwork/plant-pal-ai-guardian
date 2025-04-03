@@ -11,9 +11,10 @@ interface EditPlantDialogProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   plant: Plant;
+  onPlantUpdated: (updatedPlant: Plant) => void;
 }
 
-const EditPlantDialog = ({ isOpen, setIsOpen, plant }: EditPlantDialogProps) => {
+const EditPlantDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: EditPlantDialogProps) => {
   const [name, setName] = useState(plant.name);
   const [location, setLocation] = useState(plant.location);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,16 +23,18 @@ const EditPlantDialog = ({ isOpen, setIsOpen, plant }: EditPlantDialogProps) => 
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Mock updating the plant data
-    setTimeout(() => {
-      // In a real implementation, this would update the backend
-      toast({
-        title: "Plant updated",
-        description: `${name} has been updated successfully.`,
-      });
-      setIsSubmitting(false);
-      setIsOpen(false);
-    }, 1000);
+    // Create updated plant object
+    const updatedPlant = {
+      ...plant,
+      name,
+      location
+    };
+
+    // Call the onPlantUpdated callback with the updated plant data
+    onPlantUpdated(updatedPlant);
+    
+    setIsSubmitting(false);
+    setIsOpen(false);
   };
 
   return (

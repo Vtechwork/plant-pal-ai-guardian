@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -15,9 +14,10 @@ interface AddDataDialogProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   plant: Plant;
+  onPlantUpdated: (updatedPlant: Plant) => void;
 }
 
-const AddDataDialog = ({ isOpen, setIsOpen, plant }: AddDataDialogProps) => {
+const AddDataDialog = ({ isOpen, setIsOpen, plant, onPlantUpdated }: AddDataDialogProps) => {
   const [activeTab, setActiveTab] = useState("watering");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [waterAmount, setWaterAmount] = useState("");
@@ -27,31 +27,45 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant }: AddDataDialogProps) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Mock adding new data
-    setTimeout(() => {
-      let message = "";
-      switch(activeTab) {
-        case "watering":
-          message = `Added ${waterAmount}ml of water to ${plant.name}`;
-          break;
-        case "fertilizing":
-          message = `Added fertilizer to ${plant.name}`;
-          break;
-        case "photo":
-          message = `Added new photo of ${plant.name}`;
-          break;
-        case "note":
-          message = `Added note to ${plant.name}`;
-          break;
-      }
+    // Create a new history item based on the active tab
+    const now = new Date().toISOString();
+    const newHistoryItem = {
+      id: `hist-${Date.now()}`,
+      date: now,
+      type: activeTab as "watering" | "fertilizing" | "photo" | "note",
+      details: ""
+    };
 
-      toast({
-        title: "Data recorded",
-        description: message,
-      });
-      setIsSubmitting(false);
-      setIsOpen(false);
-    }, 1000);
+    // Add details based on the tab
+    switch(activeTab) {
+      case "watering":
+        newHistoryItem.details = `${waterAmount}ml of water${notes ? ` - ${notes}` : ''}`;
+        break;
+      case "fertilizing":
+        newHistoryItem.details = `Fertilizer added${notes ? ` - ${notes}` : ''}`;
+        break;
+      case "photo":
+        newHistoryItem.details = notes || "New photo added";
+        break;
+      case "note":
+        newHistoryItem.details = notes || "New note added";
+        break;
+    }
+
+    // Create updated plant with new history item
+    const updatedPlant = {
+      ...plant,
+      history: [newHistoryItem, ...plant.history]
+    };
+
+    // Call the onPlantUpdated callback with the updated plant data
+    onPlantUpdated(updatedPlant);
+
+    // Reset form
+    setWaterAmount("");
+    setNotes("");
+    setIsSubmitting(false);
+    setIsOpen(false);
   };
 
   return (
@@ -136,6 +150,8 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant }: AddDataDialogProps) => {
                   <Textarea
                     id="fertilizer-notes"
                     placeholder="Any additional notes about fertilizing"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
                   />
                 </div>
               </div>
@@ -157,6 +173,8 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant }: AddDataDialogProps) => {
                   <Textarea
                     id="photo-notes"
                     placeholder="Add a caption to your photo"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
                   />
                 </div>
               </div>
@@ -177,6 +195,8 @@ const AddDataDialog = ({ isOpen, setIsOpen, plant }: AddDataDialogProps) => {
                     id="note-content"
                     placeholder="What's happening with your plant?"
                     rows={5}
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
                   />
                 </div>
               </div>
